@@ -50,7 +50,5 @@ class Client
             $this->options,
             array_intersect_key($normalizedOptions, $this->options)
         );
-
-        return $this->options;
     }
 }
