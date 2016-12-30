@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Balance_Resp><AccountType>PAYG</AccountType><Balance>0.00</Balance><Currency><Code>XXX</Code><Symbol>$</Symbol></Currency></Balance_Resp>
