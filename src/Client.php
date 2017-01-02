@@ -26,7 +26,6 @@ class Client
         'long' => null,
         'truncate' => null,
         'invalidCharAction' => null,
-        'log' => false
     ];
 
     public function __construct(

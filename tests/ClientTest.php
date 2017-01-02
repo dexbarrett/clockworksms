@@ -34,9 +34,8 @@ class ClientTest extends AbstractTest
 
     public function overrides_provided_options()
     {
-        $client = new Client($this->getApiKey(), ['ssl' => true, 'log' => true]);
+        $client = new Client($this->getApiKey(), ['ssl' => true]);
         $this->assertEquals($client->getOptionValue('ssl'), true);
-        $this->assertEquals($client->getOptionValue('log'), true);
     }
 
     /**
