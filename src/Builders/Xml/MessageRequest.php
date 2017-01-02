@@ -8,11 +8,17 @@ class MessageRequest extends Request
 {
     public function build()
     {
-        $xml = new SimpleXmlElement('<?xml version="1.0" encoding="UTF-8"?><SMS></SMS>');
+        $messages = $this->command->getData();
 
-        $xml->addChild('To', $this->command->getData()['to']);
-        $xml->addChild('Content', $this->command->getData()['message']);
+        $xml = new SimpleXmlElement('<?xml version="1.0" encoding="UTF-8"?><body></body>');
 
-        return $xml;
+
+        foreach ($messages as $message) {
+            $smsNode = $xml->addChild('SMS');
+            $smsNode->addChild('To', $message['to']);
+            $smsNode->addChild('Content', $message['message']);
+        }
+
+        return $xml->children();
     }
 }

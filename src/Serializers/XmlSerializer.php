@@ -21,14 +21,16 @@ class XmlSerializer extends Serializer
         $commandNode = $xml->createElement(ucfirst($command->getName()));
         $commandNode->appendChild($xml->createElement('Key', $command->getApiKey()));
 
-        $requestBody = $this->builderFactory
+        $requestBodyNodes = $this->builderFactory
                             ->createRequest($command, $this->getFormat())
                             ->build();
 
-        if ($requestBody !== null) {
-            $commandNode->appendChild(
-                $xml->importNode(dom_import_simplexml($requestBody), true)
-            );
+        if ($requestBodyNodes !== null) {
+            foreach ($requestBodyNodes as $node) {
+                $commandNode->appendChild(
+                    $xml->importNode(dom_import_simplexml($node), true)
+                );
+            }
         }
        
         $xml->appendChild($commandNode);

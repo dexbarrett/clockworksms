@@ -51,9 +51,13 @@ class Client
         return $this->sendRequest('balance');
     }
 
-    public function send(array $message)
+    public function send(array $messages)
     {
-        return $this->sendRequest('send', $message);
+        $multipleMessages = $this->containsMultipleMessages($messages);
+
+        $messages = ($multipleMessages)? $messages : [$messages];
+
+        return $this->sendRequest('send', $messages);
     }
 
     public function getOptionValue($optionName)
@@ -109,5 +113,10 @@ class Client
     protected function getFormat()
     {
         return $this->format;
+    }
+
+    private function containsMultipleMessages($messages)
+    {
+        return count(array_filter($messages, 'is_array')) > 0;
     }
 }
