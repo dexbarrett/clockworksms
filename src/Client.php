@@ -58,7 +58,10 @@ class Client
         $multipleMessages = $this->containsMultipleMessages($messages);
 
         if ($multipleMessages && count($messages) > self::MESSAGE_LIMIT) {
-            throw new ClockworkSmsException(sprintf('Please call the send method with a maximum of %d messages', self::MESSAGE_LIMIT));
+            throw new ClockworkSmsException(sprintf(
+                'Please call the send method with a maximum of %d messages',
+                self::MESSAGE_LIMIT
+            ));
         }
 
         $messages = ($multipleMessages)? $messages : [$messages];
