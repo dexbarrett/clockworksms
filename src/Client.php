@@ -7,6 +7,8 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class Client
 {
+    const MESSAGE_LIMIT = 500;
+
     private $apiKey;
     private $httpClient;
     private $commandFactory;
@@ -54,6 +56,10 @@ class Client
     public function send(array $messages)
     {
         $multipleMessages = $this->containsMultipleMessages($messages);
+
+        if ($multipleMessages && count($messages) > self::MESSAGE_LIMIT) {
+            throw new ClockworkSmsException(sprintf('Please call the send method with a maximum of %d messages', self::MESSAGE_LIMIT));
+        }
 
         $messages = ($multipleMessages)? $messages : [$messages];
 
