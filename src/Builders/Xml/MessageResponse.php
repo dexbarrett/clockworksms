@@ -34,13 +34,11 @@ class MessageResponse extends XmlResponse
             $messageData['sms'] = array_filter(
                 (array)$message,
                 [$this, 'isNotErrorNode'],
-                ARRAY_FILTER_USE_BOTH 
+                ARRAY_FILTER_USE_BOTH
             );
 
             $response[] = $messageData;
-
         }
-
     }
 
     protected function isNotErrorNode($nodeValue, $nodeName)
