@@ -52,6 +52,11 @@ class Client
         return $this->sendRequest('balance');
     }
 
+    public function send(array $message)
+    {
+        return $this->sendRequest('send', $message);
+    }
+
     public function getOptionValue($optionName)
     {
         $optionName = strtolower($optionName);
@@ -82,7 +87,8 @@ class Client
             'body' => $command->serialize()
         ]);
 
-        return $command->deserialize($response->getBody());
+
+        return $command->deserialize((string)$response->getBody());
     }
 
 

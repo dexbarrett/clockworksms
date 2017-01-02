@@ -34,3 +34,4 @@ composer.lock
 docs
 vendor
 index.php
+*.TODO

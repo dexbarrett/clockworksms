@@ -3,11 +3,11 @@ namespace DexBarrett\ClockworkSms\Builders\Xml;
 
 use SimpleXmlElement;
 
-class BalanceResponse
+class BalanceResponse extends XmlResponse
 {
-    public function parse($data)
+    protected function parseResponse($xml)
     {
-        $xml = new SimpleXmlElement($data);
+        //$xml = new SimpleXmlElement($data);
         $toArray = json_decode(json_encode($xml), true);
         $output = [];
 
