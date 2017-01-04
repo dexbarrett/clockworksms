@@ -19,7 +19,7 @@ class ClientTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
+     * @expectedException \DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
 
     public function fails_if_no_api_key_is_provided()
@@ -39,7 +39,7 @@ class ClientTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
+     * @expectedException \DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
     public function throws_error_when_trying_to_get_invalid_option()
     {
@@ -49,7 +49,7 @@ class ClientTest extends AbstractTest
 
     /**
      * @test
-     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
+     * @expectedException \DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
     public function discards_invalid_options_provided()
     {
