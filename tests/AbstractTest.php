@@ -13,6 +13,6 @@ abstract class AbstractTest extends PHPUnit_Framework_TestCase
 
     public function getFixtureContent($fixtureName)
     {
-        return file_get_contents(__DIR__ . "/fixtures/{$fixtureName}.txt");
+        return file_get_contents(__DIR__ . "/Fixtures/{$fixtureName}.txt");
     }
 }
