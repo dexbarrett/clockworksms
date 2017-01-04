@@ -4,6 +4,7 @@ namespace DexBarrett\ClockworkSms\Test;
 use DexBarrett\ClockworkSms\Client;
 use DexBarrett\ClockworkSms\Commands\Command;
 use DexBarrett\ClockworkSms\Commands\CommandFactory;
+use DexBarrett\ClockworkSms\Exception\ClockworkSmsException;
 use GuzzleHttp\Client as GuzzleClient;
 use Mockery;
 
