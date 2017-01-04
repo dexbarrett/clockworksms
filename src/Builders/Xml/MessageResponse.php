@@ -39,6 +39,8 @@ class MessageResponse extends XmlResponse
 
             $response[] = $messageData;
         }
+
+        return $response;
     }
 
     protected function isNotErrorNode($nodeValue, $nodeName)
