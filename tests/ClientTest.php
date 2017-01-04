@@ -4,7 +4,6 @@ namespace DexBarrett\ClockworkSms\Test;
 use DexBarrett\ClockworkSms\Client;
 use DexBarrett\ClockworkSms\Commands\Command;
 use DexBarrett\ClockworkSms\Commands\CommandFactory;
-use DexBarrett\ClockworkSms\Exception\ClockworkSmsException;
 use GuzzleHttp\Client as GuzzleClient;
 use Mockery;
 
@@ -19,12 +18,11 @@ class ClientTest extends AbstractTest
 
     /**
      * @test
+     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
 
     public function fails_if_no_api_key_is_provided()
-    {
-        $this->expectException(ClockworkSmsException::class);
-        
+    {    
         $client = new Client();
     }
 
@@ -40,22 +38,20 @@ class ClientTest extends AbstractTest
 
     /**
      * @test
+     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
     public function throws_error_when_trying_to_get_invalid_option()
     {
-        $this->expectException(ClockworkSmsException::class);
-
         $client = new Client($this->getApiKey());
         $client->getOptionValue('foo');
     }
 
     /**
      * @test
+     * @expectedException DexBarrett\ClockworkSms\Exception\ClockworkSmsException
     */
     public function discards_invalid_options_provided()
     {
-        $this->expectException(ClockworkSmsException::class);
-
         $client = new Client($this->getApiKey(), ['log' => true, 'foo' => 'bar']);
         $client->getOptionValue('foo');
     }
