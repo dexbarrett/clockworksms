@@ -5,7 +5,8 @@ use SimpleXMLElement;
 
 class MessageResponse extends XmlResponse
 {
-    protected $errorNodes = ['errno', 'errdesc'];
+    protected $ignoredMessageKeys = ['errno', 'errdesc', 'messageid'];
+    protected $smsKeys = ['To' => 'to'];
 
     public function parseResponse($xmlData)
     {
@@ -19,23 +20,30 @@ class MessageResponse extends XmlResponse
             
             $errorNumber = $message->xpath('ErrNo');
             $errorDesc = $message->xpath('ErrDesc');
+            $messageID = $message->xpath('MessageID');
 
             $messageData['success'] = (count($errorNumber) == 0);
-
+            
             if (count($errorNumber) > 0) {
-                $messageData['errorCode'] = (string)$errorNumber[0];
+                $messageData['error_code'] = (string)$errorNumber[0];
             }
 
             if (count($errorDesc) > 0) {
-                $messageData['errorDesc'] = (string)$errorDesc[0];
+                $messageData['error_message'] = (string)$errorDesc[0];
+            }
+
+            if (count($messageID) > 0) {
+                $messageData['id'] = (string)$messageID[0];
             }
 
 
-            $messageData['sms'] = array_filter(
+            $smsData = array_filter(
                 (array)$message,
-                [$this, 'isNotErrorNode'],
+                [$this, 'isNotInIgnoredKeys'],
                 ARRAY_FILTER_USE_BOTH
             );
+
+            $messageData['sms'] = $this->replaceKeys($smsData);
 
             $response[] = $messageData;
         }
@@ -43,8 +51,28 @@ class MessageResponse extends XmlResponse
         return $response;
     }
 
-    protected function isNotErrorNode($nodeValue, $nodeName)
+    protected function isNotInIgnoredKeys($nodeValue, $nodeName)
     {
-        return ! in_array(strtolower($nodeName), $this->errorNodes);
+        return ! in_array(strtolower($nodeName), $this->ignoredMessageKeys);
+    }
+
+    protected function replaceKeys($smsData)
+    {
+        $newSmsData = [];
+
+        foreach ($smsData as $key => $value) {
+            $newSmsData[$this->getSmsKey($key)] = $value;
+        }
+
+        return $newSmsData;
+    }
+
+    protected function getSmsKey($key)
+    {
+        if (array_key_exists($key, $this->smsKeys)) {
+            return $this->smsKeys[$key];
+        }
+
+        return $key;
     }
 }
