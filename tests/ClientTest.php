@@ -10,10 +10,38 @@ use Mockery;
 class ClientTest extends AbstractTest
 {
     private $apiKey = '12345';
+    protected $commandFactoryMock;
+    protected $commandMock;
+    protected $guzzleMock;
 
     protected function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    protected function prepareMocks()
+    {
+        $this->commandFactoryMock = Mockery::mock(CommandFactory::class);
+        $this->commandMock = Mockery::mock(Command::class);
+        $this->guzzleMock = Mockery::mock(GuzzleClient::class);
+
+        $this->commandMock
+            ->shouldReceive('serialize')
+            ->once();
+
+        $this->commandFactoryMock
+            ->shouldReceive('createCommand')
+            ->once()
+            ->andReturn($this->commandMock);
+
+        $this->guzzleMock
+            ->shouldReceive('request')
+            ->once()
+            ->andReturn($this->guzzleMock);
+
+        $this->guzzleMock
+            ->shouldReceive('getBody')
+            ->once();
     }
 
     /**
@@ -61,50 +89,105 @@ class ClientTest extends AbstractTest
      */
     public function can_check_balance()
     {
-        $commandFactoryMock = Mockery::mock(CommandFactory::class);
-        $commandMock = Mockery::mock(Command::class);
-        $guzzleMock = Mockery::mock(GuzzleClient::class);
+        
+        $this->prepareMocks();
 
-        $commandMock
-            ->shouldReceive('serialize')
-            ->once();
-
-        $commandMock
+        $this->commandMock
             ->shouldReceive('deserialize')
             ->once()
             ->andReturn(
                 [
-                    'AccountType' => 'xxxx',
-                    'Balance' => '0.00',
-                    'Code' => 'xxxx',
-                    'Symbol' => '$'
+                    'account_type' => 'xxxx',
+                    'balance' => '0.00',
+                    'code' => 'xxxx',
+                    'symbol' => '$'
                 ]
             );
 
-        $commandFactoryMock
-            ->shouldReceive('createCommand')
-            ->once()
-            ->andReturn($commandMock);
-
-        $guzzleMock
-            ->shouldReceive('request')
-            ->once()
-            ->andReturn($guzzleMock);
-
-        $guzzleMock
-            ->shouldReceive('getBody')
-            ->once();
-
-        $client = new Client($this->getApiKey(), [], $guzzleMock, $commandFactoryMock);
+        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
 
         $result = $client->checkBalance();
         
         $this->assertInternalType('array', $result);
-        $this->assertArrayHasKey('AccountType', $result);
-        $this->assertArrayHasKey('Balance', $result);
-        $this->assertArrayHasKey('Code', $result);
-        $this->assertArrayHasKey('Symbol', $result);
-        $this->assertTrue(is_numeric($result['Balance']), 'Balance does not contain a numeric value');
+        $this->assertArrayHasKey('account_type', $result);
+        $this->assertArrayHasKey('balance', $result);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertArrayHasKey('symbol', $result);
+        $this->assertTrue(is_numeric($result['balance']), 'Balance does not contain a numeric value');
 
+    }
+
+    /**
+     * @test
+     */
+    public function can_send_valid_message()
+    {
+        $this->prepareMocks();
+
+        $this->commandMock
+            ->shouldReceive('deserialize')
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'success' => true,
+                        'id' => 'VE_000000000',
+                        'sms' => ['to' => '521234567890']
+                    ]
+                ]
+            );
+
+        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
+
+        $message = ['to' => '521234567890', 'message' => 'test message'];
+
+        $result = $client->send($message);
+
+        $this->assertInternalType('array', $result);
+        $this->assertArrayHasKey('success', $result[0]);
+        $this->assertArrayHasKey('sms', $result[0]);
+        $this->assertArrayHasKey('id', $result[0], 'successful response should contain a message id');
+        $this->assertArrayNotHasKey('error_code', $result[0], 'successful response should not contain an error code');
+        $this->assertArrayNotHasKey('error_message', $result[0], 'successful response should not contain an error description');
+        $this->assertTrue($result[0]['success'], 'success status should be true');
+        $this->assertEquals($result[0]['sms']['to'], $message['to']);
+
+    }
+
+    /**
+     * @test
+     */
+    public function receives_errors_when_sending_to_an_invalid_number()
+    {
+        $this->prepareMocks();
+
+        $this->commandMock
+            ->shouldReceive('deserialize')
+            ->once()
+            ->andReturn(
+                [
+                    [
+                        'success' => false,
+                        'error_code' => 10,
+                        'error_message' => "Invalid 'To' Parameter",
+                        'sms' => ['To' => '52xxxxxxxxxx']
+                    ]
+                ]
+            );
+
+        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
+
+        $message = ['to' => '52xxxxxxxxxx', 'message' => 'test message'];
+
+        $result = $client->send($message);
+
+        $this->assertInternalType('array', $result);
+        $this->assertArrayHasKey('success', $result[0]);
+        $this->assertArrayHasKey('sms', $result[0]);
+        $this->assertArrayNotHasKey('id', $result[0], 'successful response should not contain a message id');
+        $this->assertArrayHasKey('error_code', $result[0], 'successful response should contain an error code');
+        $this->assertArrayHasKey('error_message', $result[0], 'successful response should contain an error description');
+        $this->assertFalse($result[0]['success'], 'success status should be false');
+        $this->assertEquals($result[0]['sms']['To'], $message['to']);
     }
 }
