@@ -5,7 +5,7 @@ use DexBarrett\ClockworkSms\Commands\CommandFactory;
 use DexBarrett\ClockworkSms\Exception\ClockworkSmsException;
 use GuzzleHttp\Client as GuzzleClient;
 
-class Client
+class ClockworkSms
 {
     const MESSAGE_LIMIT = 500;
 

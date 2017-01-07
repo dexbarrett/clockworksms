@@ -1,7 +1,7 @@
 <?php
 namespace DexBarrett\ClockworkSms\Test;
 
-use DexBarrett\ClockworkSms\Client;
+use DexBarrett\ClockworkSms\ClockworkSms;
 use DexBarrett\ClockworkSms\Commands\Command;
 use DexBarrett\ClockworkSms\Commands\CommandFactory;
 use GuzzleHttp\Client as GuzzleClient;
@@ -51,7 +51,7 @@ class ClientTest extends AbstractTest
 
     public function fails_if_no_api_key_is_provided()
     {    
-        $client = new Client();
+        $client = new ClockworkSms();
     }
 
     /**
@@ -60,7 +60,7 @@ class ClientTest extends AbstractTest
 
     public function overrides_provided_options()
     {
-        $client = new Client($this->getApiKey(), ['ssl' => true]);
+        $client = new ClockworkSms($this->getApiKey(), ['ssl' => true]);
         $this->assertEquals($client->getOptionValue('ssl'), true);
     }
 
@@ -70,7 +70,7 @@ class ClientTest extends AbstractTest
     */
     public function throws_error_when_trying_to_get_invalid_option()
     {
-        $client = new Client($this->getApiKey());
+        $client = new ClockworkSms($this->getApiKey());
         $client->getOptionValue('foo');
     }
 
@@ -80,7 +80,7 @@ class ClientTest extends AbstractTest
     */
     public function discards_invalid_options_provided()
     {
-        $client = new Client($this->getApiKey(), ['log' => true, 'foo' => 'bar']);
+        $client = new ClockworkSms($this->getApiKey(), ['log' => true, 'foo' => 'bar']);
         $client->getOptionValue('foo');
     }
 
@@ -104,7 +104,7 @@ class ClientTest extends AbstractTest
                 ]
             );
 
-        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
+        $client = new ClockworkSms($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
 
         $result = $client->checkBalance();
         
@@ -137,7 +137,7 @@ class ClientTest extends AbstractTest
                 ]
             );
 
-        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
+        $client = new ClockworkSms($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
 
         $message = ['to' => '521234567890', 'message' => 'test message'];
 
@@ -175,7 +175,7 @@ class ClientTest extends AbstractTest
                 ]
             );
 
-        $client = new Client($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
+        $client = new ClockworkSms($this->getApiKey(), [], $this->guzzleMock, $this->commandFactoryMock);
 
         $message = ['to' => '52xxxxxxxxxx', 'message' => 'test message'];
 
