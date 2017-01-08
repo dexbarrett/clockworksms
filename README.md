@@ -1,6 +1,7 @@
 # ClockworkSms PHP Client
 [![Build Status](https://travis-ci.org/dexbarrett/clockworksms.svg?branch=master)](https://travis-ci.org/dexbarrett/clockworksms)
 [![License](https://poser.pugx.org/dexbarrett/clockworksms/license)](https://packagist.org/packages/dexbarrett/clockworksms)
+[![StyleCI](https://styleci.io/repos/75573640/shield?branch=master)](https://styleci.io/repos/75573640)
 
 Alternative PHP Client for sending text messages using the  [Clockwork SMS](https://www.clockworksms.com/) API.
 
