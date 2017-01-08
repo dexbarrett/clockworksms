@@ -14,7 +14,6 @@ class BalanceCommandTest extends AbstractTest
      */
     public function it_can_encode_request_body()
     {
-       
         $encoderMock = Mockery::mock(Serializer::class);
         $balanceCommand = new BalanceCommand('apiKey', $encoderMock, []);
         $requestBody = $this->getFixtureContent('balance_request_body');
@@ -24,7 +23,6 @@ class BalanceCommandTest extends AbstractTest
                         ->with($balanceCommand)
                         ->andReturn($requestBody);
                         
-        $this->assertXmlStringEqualsXmlString($balanceCommand->serialize(), $requestBody); 
+        $this->assertXmlStringEqualsXmlString($balanceCommand->serialize(), $requestBody);
     }
-
 }

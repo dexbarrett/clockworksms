@@ -7,7 +7,6 @@ class CommandFactory
 {
     public function createCommand($commandName, $apiKey, $format, $data = [])
     {
-
         $serializerClass = 'DexBarrett\\ClockworkSms\\Serializers\\' .
                             ucfirst($format) . 'Serializer';
 

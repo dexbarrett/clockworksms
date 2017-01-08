@@ -5,5 +5,4 @@ use DexBarrett\ClockworkSms\Builders\Request;
 
 class BalanceRequest extends Request
 {
-    
 }

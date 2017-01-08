@@ -36,7 +36,6 @@ class ClockworkSms
         GuzzleClient $httpClient = null,
         CommandFactory $commandFactory = null
     ) {
-    
         if ($apiKey === null) {
             throw new ClockworkSmsException('No API key provided');
         }
@@ -82,7 +81,6 @@ class ClockworkSms
 
     protected function sendRequest($endpoint, $data = [])
     {
-        
         $requestUrl = "{$this->base}/{$this->format}/{$endpoint}";
 
         $command = $this->commandFactory->createCommand(
