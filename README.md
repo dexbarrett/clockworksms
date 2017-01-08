@@ -144,7 +144,7 @@ array(2) {
 
 You can also check how much credit you have in your Clockwork account by calling the `checkBalance` method:
 
-```php
+``` php
 $result = $clockworkSms->checkBalance();
 ```
 
