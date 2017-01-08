@@ -50,7 +50,7 @@ class ClientTest extends AbstractTest
     */
 
     public function fails_if_no_api_key_is_provided()
-    {    
+    {
         $client = new ClockworkSms();
     }
 
@@ -89,7 +89,6 @@ class ClientTest extends AbstractTest
      */
     public function can_check_balance()
     {
-        
         $this->prepareMocks();
 
         $this->commandMock
@@ -114,7 +113,6 @@ class ClientTest extends AbstractTest
         $this->assertArrayHasKey('code', $result);
         $this->assertArrayHasKey('symbol', $result);
         $this->assertTrue(is_numeric($result['balance']), 'Balance does not contain a numeric value');
-
     }
 
     /**
@@ -151,7 +149,6 @@ class ClientTest extends AbstractTest
         $this->assertArrayNotHasKey('error_message', $result[0], 'successful response should not contain an error description');
         $this->assertTrue($result[0]['success'], 'success status should be true');
         $this->assertEquals($result[0]['sms']['to'], $message['to']);
-
     }
 
     /**
