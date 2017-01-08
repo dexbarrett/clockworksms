@@ -28,7 +28,7 @@ For this first version I decided to keep the same API and return values that the
 
 ### Sending Messages
 
-```
+```php
 use DexBarrett\ClockworkSms\ClockworkSms;
 
 $clockworkSms = new ClockworkSms('yourAPIKeyHere');
@@ -60,7 +60,7 @@ Each index of this array will contain an array as well with information about ea
 #### Multiple messages
 To send multiple messages at once, simply pass a multidimensional array to the `send` method:
 
-```
+```php
 $result = $clockworkSms->send([
     [ 'to' => '521111111111','message' => 'one message'],
     [ 'to' => '520000000000','message' => 'another message']
@@ -101,7 +101,7 @@ array(2) {
 ### Message errors
 If you provide an invalid number for the `to` key in the messages array, what you'll receive back will contain an `error_code` and `error_message` key for each failed message. The `success` key will be `false` for that message:
 
-```
+```php
 $result = $clockworkSms->send([
     [ 'to' => '520000000000','message' => 'one message'],
     [ 'to' => 'invalidNumber','message' => 'another message']
@@ -144,7 +144,7 @@ array(2) {
 
 You can also check how much credit you have in your Clockwork account by calling the `checkBalance` method:
 
-```
+```php
 $result = $clockworkSms->checkBalance();
 ```
 
@@ -165,7 +165,7 @@ array(4) {
 ### Exception handling
 There are cases where the library will throw an exception. Tipically if you provide an invalid API key or if you try to send messages but you don't have enough balance in your Clockwork account:
 
-```
+```php
 use DexBarrett\ClockworkSms\ClockworkSms;
 use DexBarrett\ClockworkSms\Exception\ClockworkSmsException;
 
