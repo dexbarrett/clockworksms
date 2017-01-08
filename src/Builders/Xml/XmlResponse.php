@@ -11,7 +11,6 @@ abstract class XmlResponse
         $xml = new SimpleXMLElement($responseData);
 
         $error = $xml->xpath('/*/ErrNo');
-        $errorDesc = null;
 
         if (count($error) > 0) {
             $errorDesc = $xml->xpath('/*/ErrDesc');
