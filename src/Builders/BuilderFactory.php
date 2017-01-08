@@ -22,6 +22,6 @@ class BuilderFactory
         $class = __NAMESPACE__ . '\\' . ucfirst($format) .
          '\\' . ucfirst($command) . ucfirst($type);
 
-         return $class;
+        return $class;
     }
 }

@@ -8,12 +8,10 @@ use DexBarrett\ClockworkSms\Encoders\Encoder;
 
 class XmlSerializer extends Serializer
 {
-
     protected $format = 'xml';
 
     public function serialize(Command $command)
     {
-        
         $xml = new DomDocument('1.0', 'utf-8');
         $xml->formatOutput = true;
         $xml->preserveWhiteSpace = false;
