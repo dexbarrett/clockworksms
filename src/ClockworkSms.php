@@ -14,14 +14,14 @@ class ClockworkSms
     private $commandFactory;
     private $format = 'xml';
 
-    private $base = 'http://api.clockworksms.com';
+    private $base = 'api.clockworksms.com';
 
     private $contentTypes = [
         'xml' => 'text/xml'
     ];
 
     private $options = [
-        'ssl' => false,
+        'ssl' => true,
         'proxyHost' => null,
         'proxyPort' => null,
         'from' => null,
@@ -81,7 +81,8 @@ class ClockworkSms
 
     protected function sendRequest($endpoint, $data = [])
     {
-        $requestUrl = "{$this->base}/{$this->format}/{$endpoint}";
+
+        $requestUrl = $this->buildApiEndpointUrl($endpoint);
 
         $command = $this->commandFactory->createCommand(
             $endpoint,
@@ -125,5 +126,16 @@ class ClockworkSms
     private function containsMultipleMessages($messages)
     {
         return count(array_filter($messages, 'is_array')) > 0;
+    }
+
+    protected function buildApiEndpointUrl($endpoint)
+    {
+        return sprintf(
+            '%s://%s/%s/%s',
+            ($this->getOptionValue('ssl'))? 'https':'http',
+            $this->base,
+            $this->format,
+            $endpoint
+        );
     }
 }
