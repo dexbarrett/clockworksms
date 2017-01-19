@@ -6,6 +6,15 @@ use DexBarrett\ClockworkSms\Builders\Request;
 
 class MessageRequest extends Request
 {
+    private $messageNodes = [
+        'to' => 'To',
+        'message' => 'Content',
+        'from' => 'From',
+        'long' => 'Long',
+        'truncate' => 'Truncate',
+        'invalidCharAction' => 'InvalidCharAction'
+    ];
+
     public function build()
     {
         $messages = $this->command->getData();
@@ -15,10 +24,13 @@ class MessageRequest extends Request
 
         foreach ($messages as $message) {
             $smsNode = $xml->addChild('SMS');
-            $smsNode->addChild('To', $message['to']);
-            $smsNode->addChild('Content', $message['message']);
+            array_walk($message, function ($value, $key) use ($smsNode) {
+                if (array_key_exists($key, $this->messageNodes)) {
+                    $smsNode->addChild($this->messageNodes[$key], $value);
+                }
+            });
         }
-
+        
         return $xml->children();
     }
 }

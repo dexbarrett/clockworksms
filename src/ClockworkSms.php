@@ -22,12 +22,18 @@ class ClockworkSms
 
     private $options = [
         'ssl' => true,
-        'proxyHost' => null,
-        'proxyPort' => null,
         'from' => null,
         'long' => null,
         'truncate' => null,
         'invalidCharAction' => null,
+    ];
+
+    private $requiredParams = [
+        'send' => ['to', 'message']
+    ];
+
+    private $validParams = [
+        'send' => ['to', 'message', 'from', 'long', 'truncate', 'invalidCharAction']
     ];
 
     public function __construct(
@@ -54,18 +60,12 @@ class ClockworkSms
 
     public function send(array $messages)
     {
-        $multipleMessages = $this->containsMultipleMessages($messages);
 
-        if ($multipleMessages && count($messages) > self::MESSAGE_LIMIT) {
-            throw new ClockworkSmsException(sprintf(
-                'Please call the send method with a maximum of %d messages',
-                self::MESSAGE_LIMIT
-            ));
-        }
+        $messages = ($this->containsMultipleMessages($messages))? $messages : [$messages];
 
-        $messages = ($multipleMessages)? $messages : [$messages];
+        $this->validateMessages($messages);
 
-        return $this->sendRequest('send', $messages);
+        return $this->sendRequest('send', $this->mergeMessageOptions($messages));
     }
 
     public function getOptionValue($optionName)
@@ -137,5 +137,68 @@ class ClockworkSms
             $this->format,
             $endpoint
         );
+    }
+
+    protected function validateParameters($method, $parameters)
+    {
+        $missingParameters = array_diff(
+            $this->requiredParams[$method],
+            array_keys($parameters)
+        );
+
+        if (count($missingParameters)) {
+            throw new ClockworkSmsException(
+                "the following parameters are missing in call to method '{$method}': "
+                . implode(', ', $missingParameters)
+            );
+        }
+    }
+
+    protected function validateMessages($messages)
+    {
+        if ($this->exceedsMessageLimit($messages)) {
+            throw new ClockworkSmsException(sprintf(
+                'Please call the send method with a maximum of %d messages',
+                self::MESSAGE_LIMIT
+            ));
+        }
+
+        foreach ($messages as $message) {
+            $this->validateParameters('send', $message);
+        }
+    }
+
+    protected function exceedsMessageLimit($messages)
+    {
+        return count($messages) > self::MESSAGE_LIMIT;
+    }
+
+    protected function mergeMessageOptions(array $messages)
+    {
+        $mergedMessages = [];
+
+        $globalMessageOptions = array_filter(
+            $this->options,
+            function ($value, $key) {
+                return $key != 'ssl';
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+
+        foreach ($messages as $message) {
+            $validParams = array_intersect_key(
+                $message,
+                array_flip($this->validParams['send'])
+            );
+
+            $mergedMessages[] = array_filter(
+                array_merge($globalMessageOptions, $validParams),
+                function ($value) {
+                    return $value !== null;
+                }
+            );
+        }
+
+        return $mergedMessages;
     }
 }
