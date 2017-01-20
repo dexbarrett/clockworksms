@@ -192,7 +192,7 @@ This packages works for the most common scenario which is sending messages by sp
 These are some of the features or improvements to make:
 *   [x] ~~using options provided in the constructor (like specifying a 'from' address for messages or truncating long messages)~~
 *   [x] ~~allowing to choose between HTTP and HTTPS (currently all is sent through the HTTP endpoints)~~
-*   Laravel integration: creating a service provider for integration with the Laravel framework
+*   [ ] Laravel integration: creating a service provider for integration with the Laravel framework
 
 ## License
 Developed by [Judas Borbón](https://jborbon.me) and released under the [MIT License](https://github.com/dexbarrett/clockworksms/blob/master/LICENSE.md)
