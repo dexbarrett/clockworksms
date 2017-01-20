@@ -16,7 +16,7 @@ Alternative PHP Client for sending text messages using the  [Clockwork SMS](http
 * [Notes](#notes)
 
 ## Requirements
-*   PHP >= 5.5
+*   PHP >= 5.6
 *   PHP's Curl extension (Guzzle is used to make the HTTP requests and it uses the curl extension by default)
 *   A Clockwork API key
 
@@ -190,8 +190,8 @@ try{
 This packages works for the most common scenario which is sending messages by specifying the destination number and message content. It's in early stages so there are things from the original library that are not supported yet and others that were not included on purpose (like logging).
 
 These are some of the features or improvements to make:
-*   using options provided in the constructor (like specifying a 'from' address for messages or truncating long messages)
-*   allowing to choose between HTTP and HTTPS (currently all is sent through the HTTP endpoints)
+*   [x] ~~using options provided in the constructor (like specifying a 'from' address for messages or truncating long messages)~~
+*   [x] ~~allowing to choose between HTTP and HTTPS (currently all is sent through the HTTP endpoints)~~
 *   Laravel integration: creating a service provider for integration with the Laravel framework
 
 ## License
