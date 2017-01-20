@@ -60,7 +60,6 @@ class ClockworkSms
 
     public function send(array $messages)
     {
-
         $messages = ($this->containsMultipleMessages($messages))? $messages : [$messages];
 
         $this->validateMessages($messages);
@@ -81,7 +80,6 @@ class ClockworkSms
 
     protected function sendRequest($endpoint, $data = [])
     {
-
         $requestUrl = $this->buildApiEndpointUrl($endpoint);
 
         $command = $this->commandFactory->createCommand(
